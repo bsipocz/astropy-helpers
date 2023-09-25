@@ -1,5 +1,5 @@
 import glob
-import imp
+import importlib
 import os
 import pkgutil
 import re
@@ -159,7 +159,7 @@ def test_update_git_devstr(version_test_package, capsys):
         run_cmd('git', ['commit', '-m', 'test'])
 
         import apyhtest_eva.version
-        imp.reload(apyhtest_eva.version)
+        importlib.reload(apyhtest_eva.version)
 
     # Previously this checked packagename.__version__, but in order for that to
     # be updated we also have to re-import _astropy_init which could be tricky.
@@ -206,7 +206,7 @@ def test_version_update_in_other_repos(version_test_package, tmpdir):
             run_cmd('git', ['init'])
 
             import apyhtest_eva.version
-            imp.reload(apyhtest_eva.version)
+            importlib.reload(apyhtest_eva.version)
             m = _DEV_VERSION_RE.match(apyhtest_eva.version.version)
             assert m
             assert int(m.group(1)) == correct_revcount
@@ -220,7 +220,7 @@ def test_version_update_in_other_repos(version_test_package, tmpdir):
                 run_cmd('git', ['commit', '-m', 'A message'])
 
             import apyhtest_eva.version
-            imp.reload(apyhtest_eva.version)
+            importlib.reload(apyhtest_eva.version)
             m = _DEV_VERSION_RE.match(apyhtest_eva.version.version)
             assert m
             assert int(m.group(1)) == correct_revcount

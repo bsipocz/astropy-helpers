@@ -1,11 +1,11 @@
 # Licensed under a 3-clause BSD style license - see LICENSE.rst
 
 import contextlib
-import imp
 import os
 import sys
 import glob
 
+import importlib
 from importlib import machinery as import_machinery
 
 
@@ -54,9 +54,8 @@ def get_numpy_include_path():
     import builtins
     if hasattr(builtins, '__NUMPY_SETUP__'):
         del builtins.__NUMPY_SETUP__
-    import imp
     import numpy
-    imp.reload(numpy)
+    importlib.reload(numpy)
 
     try:
         numpy_include = numpy.get_include()
@@ -217,12 +216,8 @@ def import_file(filename, name=None):
     if not os.path.exists(filename):
         raise ImportError('Could not import file {0}'.format(filename))
 
-    if import_machinery:
-        loader = import_machinery.SourceFileLoader(name, filename)
-        mod = loader.load_module()
-    else:
-        with open(filename, mode) as fd:
-            mod = imp.load_module(name, fd, filename, ('.py', mode, 1))
+    loader = import_machinery.SourceFileLoader(name, filename)
+    mod = loader.load_module()
 
     return mod
 
